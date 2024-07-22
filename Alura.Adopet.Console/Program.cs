@@ -7,41 +7,12 @@ HttpClient client = ConfiguraHttpClient("http://localhost:5057");
 Console.ForegroundColor = ConsoleColor.Green;
 try
 {
-    // args[0] é o comando a ser executado pelo programa
-    switch (args[0].Trim())
+    string comando = args[0].Trim();
+    switch (comando)
     {
         case "import":
-            List<Pet> listaDePet = new List<Pet>();
-
-            // args[1] é o caminho do arquivo a ser importado
-            using (StreamReader sr = new StreamReader(args[1]))
-            {
-                while (!sr.EndOfStream)
-                {
-                    // separa linha usando ponto e vírgula
-                    string[] propriedades = sr.ReadLine().Split(';');
-                    // cria objeto Pet a partir da separação
-                    Pet pet = new Pet(Guid.Parse(propriedades[0]),
-                      propriedades[1],
-                      TipoPet.Cachorro
-                     );
-
-                    Console.WriteLine(pet);
-                    listaDePet.Add(pet);
-                }
-            }
-            foreach (var pet in listaDePet)
-            {
-                try
-                {
-                    var resposta = await CreatePetAsync(pet);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            Console.WriteLine("Importação concluída!");
+            var import = new Import();
+            await import.importacaoArquivoPetAsync(caminhoDoArquivoDeImportacao:args[1]);
             break;
         case "help":
             Console.WriteLine("Lista de comandos.");
@@ -57,24 +28,28 @@ try
                 Console.WriteLine($" adopet show   <arquivo> comando que exibe no terminal o conteúdo do arquivo importado." + "\n\n\n\n");
                 Console.WriteLine("Execute 'adopet.exe help [comando]' para obter mais informações sobre um comando." + "\n\n\n");
             }
-            // exibe o help daquele comando específico
             else if (args.Length == 2)
             {
-                if (args[1].Equals("import"))
+                string comandoASerExibido = args[1];
+                if (comandoASerExibido.Equals("import"))
                 {
                     Console.WriteLine(" adopet import <arquivo> " +
                         "comando que realiza a importação do arquivo de pets.");
                 }
-                if (args[1].Equals("show"))
+                if (comandoASerExibido.Equals("show"))
                 {
                     Console.WriteLine(" adopet show <arquivo>  comando que " +
                         "exibe no terminal o conteúdo do arquivo importado.");
                 }
+                if (comandoASerExibido.Equals("list"))
+                {
+                    Console.WriteLine($"adopet list comando que exibe no terminal o conteúdo do arquivo");
+                }
             }
             break;
         case "show":
-            // args[1] é o caminho do arquivo a ser exibido
-            using (StreamReader sr = new StreamReader(args[1]))
+            string caminhoDoArquivoASerExibido = args[1];
+            using (StreamReader sr = new StreamReader(caminhoDoArquivoASerExibido))
             {
                 Console.WriteLine("----- Serão importados os dados abaixo -----");
                 while (!sr.EndOfStream)
