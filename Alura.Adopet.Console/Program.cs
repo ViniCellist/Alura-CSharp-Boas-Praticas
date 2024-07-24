@@ -27,7 +27,6 @@ try
             await list.ListaDadosPetsDaAPIAsync();
             break;
         default:
-            // exibe mensagem de comando inválido
             Console.WriteLine("Comando inválido!");
             break;
     }

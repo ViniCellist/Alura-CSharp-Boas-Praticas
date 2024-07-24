@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Alura.Adopet.Console
 {
+    [DocComando(instrucao: "list", documentacao: "adopet list comando que exibe no terminal o conteúdo cadastrado na base de dados da AdoPet.")]
     internal class List
     {
         HttpClient client;
         public List()
         {
-            client = new HttpClient("http://localhost:5057");
+            Client = ConfiguraHttpClient("http://localhost:5057");
         }
+
+        public HttpClient Client { get => client; set => client = value; }
+
         public async Task ListaDadosPetsDaAPIAsync()
         {
             IEnumerable<Pet>? pets = await ListaPetsAsync();
@@ -36,7 +41,7 @@ namespace Alura.Adopet.Console
 
         async Task<IEnumerable<Pet>?> ListaPetsAsync()
         {
-            HttpResponseMessage response = await client.GetAsync("pet/list");
+            HttpResponseMessage response = await Client.GetAsync("pet/list");
             return await response.Content.ReadFromJsonAsync<IEnumerable<Pet>>();
         }
     }
