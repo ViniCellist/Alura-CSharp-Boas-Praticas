@@ -5,16 +5,17 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Alura.Adopet.Console.Modelos;
 
-namespace Alura.Adopet.Console
+namespace Alura.Adopet.Console.Comandos
 {
-    [DocComando(instrucao:"import", documentacao: "adopet import <ARQUIVO> comando que realiza a importação do arquivo de pets.")]
+    [DocComando(instrucao: "import", documentacao: "adopet import <ARQUIVO> comando que realiza a importação do arquivo de pets.")]
     internal class Import
     {
         HttpClient client;
         public Import()
         {
-            this.client = ConfiguraHttpClient("http://localhost:5057");
+            client = ConfiguraHttpClient("http://localhost:5057");
         }
         public async Task importacaoArquivoPetAsync(string caminhoDoArquivoDeImportacao)
         {

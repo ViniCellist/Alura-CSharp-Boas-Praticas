@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Alura.Adopet.Console
+namespace Alura.Adopet.Console.Comandos
 {
-    [DocComando(instrucao: "help", 
+    [DocComando(instrucao: "help",
         documentacao: "adopet help comando que exibe informações da ajuda. \n" +
             "adopet help <NOME_COMANDO> para acessar a ajuda de um comando específico.")]
     internal class Help
@@ -28,15 +28,15 @@ namespace Alura.Adopet.Console
                 System.Console.WriteLine($"Adopet (1.0) - Aplicativo de linha de comando (CLI).");
                 System.Console.WriteLine($"Realiza a importação em lote de um arquivos de pets.");
                 System.Console.WriteLine($"Comando possíveis: ");
-                foreach ( var doc in docs.Values )
+                foreach (var doc in docs.Values)
                 {
-                    System.Console.WriteLine (doc.Documentacao);
+                    System.Console.WriteLine(doc.Documentacao);
                 }
             }
             else if (parametros.Length == 2)
             {
                 string comandoASerExibido = parametros[1];
-                if(docs.ContainsKey(comandoASerExibido))
+                if (docs.ContainsKey(comandoASerExibido))
                 {
                     var comando = docs[comandoASerExibido];
                     System.Console.WriteLine(comando.Documentacao);
