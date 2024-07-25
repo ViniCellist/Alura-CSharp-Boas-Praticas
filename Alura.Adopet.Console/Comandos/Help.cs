@@ -1,34 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace Alura.Adopet.Console.Comandos
 {
     [DocComando(instrucao: "help",
-        documentacao: "adopet help comando que exibe informações da ajuda. \n" +
-            "adopet help <NOME_COMANDO> para acessar a ajuda de um comando específico.")]
-    internal class Help:IComando
+     documentacao: "adopet help comando que exibe informações da ajuda. \n" +
+        "adopet help <NOME_COMANDO> para acessar a ajuda de um comando específico.")]
+    internal class Help : IComando
     {
+        private Dictionary<string, DocComando> docs;
+
+        public Help()
+        {
+            docs = Assembly.GetExecutingAssembly().GetTypes()
+             .Where(t => t.GetCustomAttributes<DocComando>().Any())
+             .Select(t => t.GetCustomAttribute<DocComando>()!)
+             .ToDictionary(d => d.Instrucao);
+        }
+
         public Task ExecutarAsync(string[] args)
         {
             this.ExibeDocumentacao(parametros: args);
             return Task.CompletedTask;
         }
 
-        private Dictionary<string, DocComando> docs;
-
-        public Help()
-        {
-            docs = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(t => t.GetCustomAttributes<DocComando>().Any())
-                .Select(t => t.GetCustomAttributes<DocComando>()!)
-                .ToDictionary(d => d.Instrucao);
-        }
         private void ExibeDocumentacao(string[] parametros)
         {
+            // se não passou mais nenhum argumento mostra help de todos os comandos
             if (parametros.Length == 1)
             {
                 System.Console.WriteLine($"Adopet (1.0) - Aplicativo de linha de comando (CLI).");
@@ -39,6 +36,7 @@ namespace Alura.Adopet.Console.Comandos
                     System.Console.WriteLine(doc.Documentacao);
                 }
             }
+            // exibe o help daquele comando específico
             else if (parametros.Length == 2)
             {
                 string comandoASerExibido = parametros[1];
@@ -47,6 +45,7 @@ namespace Alura.Adopet.Console.Comandos
                     var comando = docs[comandoASerExibido];
                     System.Console.WriteLine(comando.Documentacao);
                 }
+
             }
         }
     }

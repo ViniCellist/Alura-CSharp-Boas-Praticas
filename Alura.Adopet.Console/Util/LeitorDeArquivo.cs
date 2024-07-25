@@ -27,6 +27,7 @@ namespace Alura.Adopet.Console.Util
                     listaDePet.Add(pet);
                 }
             }
+
             return listaDePet;
         }
     }
